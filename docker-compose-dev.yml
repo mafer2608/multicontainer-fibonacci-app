@@ -1,0 +1,60 @@
+version: '3'
+services:
+  postgres:
+    image: 'postgres:latest'
+    environment:
+      - POSTGRES_PASSWORD=postgres_password
+  redis:
+    image: 'redis:latest'
+  #Specifications for the build and volumes
+  nginx:
+    #Restart nginx when it crashes
+    depends_on:
+      - api
+      - client
+    restart: always
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./nginx
+    #Port mapping in local machine to container
+    ports:
+      - '3050:80'
+  api:
+    build:
+      dockerfile: Dockerfile.dev
+      #Tell docker-compose when the docker file is located.
+      context: ./server
+    volumes:
+      - /app/node_modules 
+      #Maps all the content in server (guest machine) to /app/ (container machine)
+      - ./server:/app
+    environment:
+    #Set the environment variables in the container
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - PGUSER=postgres
+      - PGHOST=postgres
+      - PGPORT=5432
+      - PGDATABASE=postgres
+      - PGPASSWORD=postgres_password
+  worker:
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./worker
+    volumes:
+      - /app/node_modules
+      #Maps all the content in worker (guest machine) to /app/ (container machine)
+      - ./worker:/app
+    environment:
+      #You can map directly with the redis host
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+  client:
+    #Otherwise, you will get a "React App exited with Code 0"
+    stdin_open: true
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./client
+    volumes:
+      - /app/node_modules
+      - ./client:/app
