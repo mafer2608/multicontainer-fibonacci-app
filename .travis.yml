@@ -28,6 +28,15 @@ after_success:
   - docker push jsrfntd/multi-worker
 
 deploy:
+  #In ElasticBeanStalk you have to configurate the environment variables like shows:
+  # PGDATABASE | multi-docker-app
+  # PGHOST | multi-docker-app.cusbksjkqeys.us-east-2.rds.amazonaws.com
+  # PGPASSWORD | Sebitas123%
+  # PGPORT | 5432
+  # PGUSER | postgres
+  # REDIS_HOST | multi-docker-redis.yo5opa.0001.use2.cache.amazonaws.com
+  # REDIS_PORT | 6379
+  
   provider: elasticbeanstalk
   region: us-east-2
   app: multi-docker-app
