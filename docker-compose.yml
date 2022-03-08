@@ -1,11 +1,11 @@
 version: "3"
 services:
   client:
-    image: "jsrfntd/client"
+    image: "jsrfntd/multi-client"
     mem_limit: 128m
     hostname: client
   server:
-    image: "jsrfntd/api"
+    image: "jsrfntd/multi-server"
     mem_limit: 128m
     hostname: api
     environment:
@@ -17,14 +17,14 @@ services:
       - PGPASSWORD=$PGPASSWORD
       - PGPORT=$PGPORT
   worker:
-    image: "jsrfntd/worker"
+    image: "jsrfntd/multi-worker"
     mem_limit: 128m
     hostname: worker
     environment:
       - REDIS_HOST=$REDIS_HOST
       - REDIS_PORT=$REDIS_PORT
   nginx:
-    image: "jsrfntd/nginx"
+    image: "jsrfntd/multi-nginx"
     mem_limit: 128m
     hostname: nginx
     ports:
