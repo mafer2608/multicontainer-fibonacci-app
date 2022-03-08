@@ -8,6 +8,7 @@ before install:
   - docker build -t jsrfntd/react-test -f ./client/Dockerfile.dev ./client
 
 #Test the front ent application
+#Here you can add other test for the other application components.
 script:
   - docker run -e CI=true jsrfntd/react-test npm test
 
